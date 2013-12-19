@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Extractor.js</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+
+    html, body {
+        font-family: "Helvetica Neue Light", "HelveticaNeue", Helvetica, Arial, sans-serif;
+        font-size: 100%;
+        margin-bottom: 30px;
+    }
+    
+    h1 {
+        border-bottom: 1px solid #ccc;
+        margin: 20px 0 0 0;
+        padding-bottom: 5px;
+    }
+
+    article {
+        margin: 30px auto 0 auto;
+        width: 640px;
+    }
+
+    pre {
+        color: #333;
+        font-size: 14px;
+        line-height: 1.4;
+        margin-top: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <article>
+    <h1>Extractor.js</h1>
+    <pre id="log"></pre>
+  </article>
+
+  <script src="../src/extractor.js"></script>
+  <script>
+
+    function log(val) {
+      var l = document.getElementById("log");
+      l.innerText = l.innerText + '\n' + val;
+    }
+    
+    function logBr() {
+      log('');
+    }
+
+    function logLn(val) {
+      log(val);
+      logBr();
+    }
+    
+
+
+  </script>
+
+</body>
+</html>

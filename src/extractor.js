@@ -10,62 +10,81 @@
 
 }('Extractor', this, function () {
 
-    var root = this,
-        previousExtractor = root.Extractor;
-    
-    var _ = {
-      
-        isDef: function (val) {
-            return typeof val !== 'undefined';
-        },
-        
-        sortDesc: function (arr) {
-            return arr.sort(function (a, b) {
-                return b - a;
-            });
-        },
-        
-        uniqueArray: function (arr) {
-            return arr.reduce(function(p, c) {
-                if (p.indexOf(c) < 0) {
-                    p.push(c)
-                }
-                return p;
-            }, []);
-        },
-        
-        strPad: function (arr, len, str) {
-            str += '';
-            while (str.length < len) {
-                str += str[0];
-            }
-            return arr.map(function (chunk) {
-                return (str + chunk).slice(-len);
-            });
+    var _ = {},
+        root = this,
+        patterns = {},
+        previousExtractor = root.Extractor,
+        settingDefaults = {
+            filter: [],
+            without: []
+        };
+
+    _.clone = function clone (obj) {
+        var cloned = {},
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) cloned[key] = obj[key];
         }
+        return cloned;
     };
 
-    function Extr(settings) {
-
-        var config = (typeof settings !== 'object') ? {} : settings;
-        
-        if (!(this instanceof dPack)) {
-            return new dPack(settings);
+    _.defaults = function defaults(obj, defaultObj) {
+        var result = _.clone(obj),
+            key;
+        for (key in defaultObj) {
+            if (defaultObj.hasOwnProperty(key) && _.isUndefined(obj[key])) obj[key] = defaultObj[key];
         }
+        return result;
+    };
+
+    _.identity = function identity(val) {
+        return val;
+    };
+
+    _.isPlainObject = function isPlainObject(val) {
+        return val && Object.prototype.toString.call(val) === '[object Object]';
+    };
+
+    _.isNot = function isNot(result) {
+        return !result;
+    };
+
+    _.isUndefined = function isUndefined(val) {
+        return typeof val === 'undefined';
+    };
+
+
+
+    function Extr(text, settings) {
+
+        var string = !_.isUndefined(text) && text !== '' ? text : false,
+            config = _.isPlainObject(settings) ? settings : {};
         
-        this.table = _.uniqueArray((_.isDef(config.list) ? config.list : defaults.list).split(''));
-        this.delimiter = _.isDef(config.delimiter) ? config.delimiter : defaults.delimiter;
-        this.chunk = _.isDef(config.chunk) ? config.chunk : defaults.chunk;
-        
-        if (this.table.indexOf(this.delimiter) !== -1) {
-            throw Error('Delimiter can not be part of the char list!');
+        if (string) {
+
+            config = _.defaults(config, settingDefaults);
+
+        } else {
+            return _.clone(patterns);
         }
     }
+
+    Extr.addPattern = function addPattern(name, regex) {
+
+    };
+
+    Extr.changePattern = function changePattern(name, regex) {
+
+    };
+
+    Extr.removePattern = function removePattern(name) {
+
+    };
 
 
     Extr.VERSION = '0.0.1';
 
-    Extr.noConflict = function () {
+    Extr.noConflict = function noConflict() {
         root.Extractor = previousExtractor;
         return this;
     };

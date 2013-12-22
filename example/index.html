@@ -57,15 +57,22 @@
     }
 
     var string1 = 'John, please get that article on www.linkedin.com to me by 5:00PM\n' +
-          'on 9th of January 2012. 4:00 would be ideal, actually. If you have any\n' +
-          'questions, You can reach me at (519)-236-2723 or get in touch with\n' +
+          'on 10th of February 2012. 4:00 would be ideal, actually 23 Oct bla. If you have any\n' +
+          'questions, You can RT reach me at (519)-236-2723 or get in touch with\n' +
           'my associate at harold.smith@gmail.com and someone@else.co.uk\n' +
-          '8:00 5:00AM Jan 9th 2012 8/23/12 www.google.com http://hotmail.com (520) 820 7123, 1-230-241-2422 john_smith@gmail.com';
+          'adding a few hashtags #tag and #super not#tag \n' +
+          'adding a few mentions @someone and @the_other \n' +
+          '8:00 5:00AM Jan 9th 2012 8/23/12 22/12/2013 24-12-2013 www.google.com http://hotmail.com (520) 820 7123, 1-230-241-2422 john_smith@gmail.com';
 
     var e = Extractor();
     var ee = Extractor(string1);
     var eee = Extractor(string1, {filter: ['emails']});
     var eeee = Extractor(string1, {without: ['emails', 'dates']});
+
+    console.log(e);
+    console.log(ee);
+    console.log(eee);
+    console.log(eeee);
 
   </script>
 

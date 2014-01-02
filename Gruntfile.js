@@ -15,7 +15,29 @@ module.exports = function(grunt) {
             ' */\n',
 
         clean: {
-            build: ['<%= pathBuild %>/_*.js']
+            build: ['<%= pathBuild %>/*'],
+            temp: ['<%= pathBuild %>/_*.js']
+        },
+
+        jasmine: {
+            build: {
+                src: ['<%= pathBuild %>/<%= fileName %>.js'],
+                options: {
+                    specs: ['test/extractorSpec.js', 'test/patternsSpec.js']
+                }
+            },
+            buildMin: {
+                src: ['<%= pathBuild %>/<%= fileName %>.min.js'],
+                options: {
+                    specs: ['test/extractorSpec.js', 'test/patternsSpec.js']
+                }
+            },
+            dev: {
+                src: ['<%= pathSrc %>/<%= fileName %>.js'],
+                options: {
+                    specs: ['test/utilsSpec.js', 'test/extractorSpec.js', 'test/patternsSpec.js']
+                }
+            }
         },
 
         jshint: {
@@ -25,22 +47,6 @@ module.exports = function(grunt) {
             dev: {
                 files: {
                     src: '<%= pathSrc %>/<%= fileName %>.js'
-                }
-            }
-        },
-
-        jasmine: {
-            dev: {
-                src: ['<%= pathPublic %>/scripts/app/**/*.js', '!<%= pathPublic %>/scripts/app/main.js'],
-                options: {
-                    // '--remote-debugger-port': 9000,
-                    keepRunner: true,
-                    vendor: '<%= pathPublic %>/scripts/libs/jquery/jquery.js',
-                    helpers: 'test/jasmine/helpers/**/*.js',
-                    specs: 'test/jasmine/spec/**/*.spec.js',
-                    junit: {
-                        path: 'test-reports'
-                    }
                 }
             }
         },
@@ -69,9 +75,9 @@ module.exports = function(grunt) {
         uglify: {
             dev: {
                 options: {
+                    banner: '<%= banner %>',
                     beautify: true,
-                    mangle: false,
-                    banner: '<%= banner %>'
+                    mangle: false
                 },
                 files: {
                     '<%= pathBuild %>/<%= fileName %>.js': ['<%= pathBuild %>/_<%= fileName %>.js']
@@ -79,13 +85,18 @@ module.exports = function(grunt) {
             },
             build: {
                 options: {
-                    report: 'gzip',
-                    banner: '<%= banner %>'
+                    banner: '<%= banner %>',
+                    report: 'gzip'
                 },
                 files: {
                     '<%= pathBuild %>/<%= fileName %>.min.js': ['<%= pathBuild %>/_<%= fileName %>.js']
                 }
             }
+        },
+
+        watch: {
+            files: ['<%= pathSrc %>/<%= fileName %>.js'],
+            tasks: ['build']
         }
 
     });
@@ -99,8 +110,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-replace');
 
     // Register task(s).
-    grunt.registerTask('build', 'Build script.', ['test-dev', 'wrap', 'uglify', 'clean']);
-    grunt.registerTask('default', 'Default task.', ['wrap']);
-    grunt.registerTask('test-dev', 'Run dev tests.', ['jshint']);
-    grunt.registerTask('wrap', 'Wrap file.', ['clean', 'replace']);
+    grunt.registerTask('build', 'Build script.', ['test-dev', 'wrap', 'uglify', 'clean:temp', 'test-build']);
+    grunt.registerTask('default', 'Default task - test and watch.', ['test-dev', 'watch']);
+    grunt.registerTask('test-build', 'Run build tests.', ['jasmine:build', 'jasmine:buildMin']);
+    grunt.registerTask('test-dev', 'Run dev tests.', ['jshint', 'jasmine:dev']);
+    grunt.registerTask('wrap', 'Wrap file.', ['clean:build', 'replace']);
 };

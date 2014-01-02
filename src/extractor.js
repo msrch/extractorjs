@@ -10,19 +10,34 @@
 
 }('Extractor', this, function () {
 
+    /** Utility values. */
     var _ = {},
         root = this,
-        patterns = {},
         previousExtractor = root.Extractor;
 
+    /**
+     * Object holding pattern methods.
+     *
+     * @type {Object} Pattern container.
+     */
+    var patterns = {};
 
-
+    /**
+     * Default config object for Extractor attributes.
+     *
+     * @type {Object}
+     */
     var extractorDefaults = {
             filter: [],
             without: [],
             duplicates: true
-    };
+        };
 
+    /**
+     * Default config object for addPattern attributes.
+     *
+     * @type {Object}
+     */
     var patternDefaults = {
             name: null,
             regexp: null,
@@ -32,6 +47,12 @@
 
 
 
+    /**
+     * Clone passed object - shallow copy.
+     *
+     * @param {Object} obj Source object.
+     * @returns {Object} Cloned object.
+     */
     _.clone = function clone (obj) {
         var cloned = {},
             key;
@@ -41,6 +62,13 @@
         return cloned;
     };
 
+    /**
+     * Apply defaults on passed object.
+     *
+     * @param {Object} obj Source object.
+     * @param {Object} defaultObj Object containing defaults.
+     * @returns {Object} Object with applied defaults.
+     */
     _.defaults = function defaults(obj, defaultObj) {
         var result = _.clone(obj),
             key;
@@ -50,34 +78,82 @@
         return result;
     };
 
+    /**
+     * Test if a value is a type of boolean.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.isBoolean = function isBoolean(val) {
         return val === true || val === false || (val && _.protoToString(val) === '[object Boolean]') || false;
     };
 
+    /**
+     * Test if a value is a type of function.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.isFunction = function isFunction(val) {
         return typeof val === 'function';
     };
 
+    /**
+     * Test if a value is a type of plain object.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.isPlainObject = function isPlainObject(val) {
         return val && _.protoToString(val) === '[object Object]';
     };
 
+    /**
+     * Test if a value is a type of regular expression.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.isRegExp = function isRegExp(val) {
         return val && _.protoToString(val) === '[object RegExp]';
     };
 
+    /**
+     * Test if a value is a type of string.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.protoToString = function protoToString(val) {
         return Object.prototype.toString.call(val);
     };
 
+    /**
+     * Test if a value is undefined.
+     *
+     * @param {Object} val The value to be tested.
+     * @returns {Boolean} Test result.
+     */
     _.isUndefined = function isUndefined(val) {
         return typeof val === 'undefined';
     };
 
+    /**
+     * Safe trim of a white space from a string.
+     *
+     * @param {String} str String to be trimmed.
+     * @returns {String} Trimmed string.
+     */
     _.trim = function trim(str) {
-        return str.replace(/^\s+|\s+$/g, '');
+        return ('' + str).replace(/^\s+|\s+$/g, '');
     };
 
+    /**
+     * Remove duplicates from an array.
+     *
+     * @param {Array} arr Source array.
+     * @returns {Array} Array without duplicates.
+     */
     _.unique = function unique(arr) {
         return arr.reduce(function (result, current) {
             if (!~result.indexOf(current)) result.push(current);
@@ -87,6 +163,15 @@
 
 
 
+    /**
+     * Main Extractor instance.
+     * If you pass a string value (and settings) you will receive an object with results.
+     * Otherwise you will get an object with pattern methods.
+     *
+     * @param {string} [value=false] String value to be parsed.
+     * @param {Object} [settings={}] Optional settings.
+     * @returns {Object} Extractor methods or results.
+     */
     function Extractor(value, settings) {
 
         var string = (!_.isUndefined(value) && value !== '') ? value : false,
@@ -119,6 +204,13 @@
         }
     }
 
+    /**
+     * Used to crate a pattern method from config object.
+     *
+     * @param {Object} config Pattern settings.
+     * @returns {Function} Pre-filled function which accepts String and a Boolean as a flag: true - include duplicates,
+     *   false - remove duplicates (default: true)
+     */
     function buildPattern(config) {
 
         return function findMatch(string, duplicates) {
@@ -134,6 +226,13 @@
         };
     }
 
+    /**
+     * Add a pattern to the library of methods.
+     * Performs a validation of the config object.
+     *
+     * @param {Object} settings Pattern settings.
+     * @returns {Function} Created methods.
+     */
     function addPattern(settings) {
 
         var config;
@@ -161,7 +260,7 @@
     }
 
 
-
+    /** Pattern - Date formats */
     addPattern({
         name: 'dates',
         regexp: (function () {
@@ -176,45 +275,60 @@
         }())
     });
 
+    /** Pattern - Email formats */
     addPattern({
         name: 'emails',
         regexp: /([a-z0-9!#$%&'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gim
     });
 
+    /** Pattern - Hash tag values */
     addPattern({
         name: 'hashtags',
         regexp: /#(.+?)(?=[\s.,:,]|$)/gim
     });
 
+    /** Pattern - Web links */
     addPattern({
         name: 'links',
         regexp: /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))/gim
     });
 
+    /** Pattern - Mention values */
     addPattern({
         name: 'mentions',
         regexp: /\B@([\w\-]+)/gim
     });
 
+    /** Pattern - Phone formats */
     addPattern({
         name: 'phones',
         regexp: /(\d?\W*(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gim
     });
 
+    /** Pattern - Time formats */
     addPattern({
         name: 'times',
         regexp: /\d{1,2}:\d{2}\s?(?:[ap]\.?m\.?)?|\d[ap]\.?m\.?/gim
     });
 
+    /**
+     * Helper for YouTube pattern method.
+     * Creates a function that returns an embed code - you can set custom width and height otherwise it will fallback
+     * to default values (560x315).
+     *
+     * @param {String} videoId Video ID.
+     * @returns {Function} Pre-filled function that returns an embed code.
+     */
     function youTubeEmbedCode(videoId) {
         return function (w, h) {
             var width = _.isUndefined(w) ? 560 : w,
                 height = _.isUndefined(h) ? 315 : h;
             return '<iframe width="' + width + '" height="' + height + '" src="//www.youtube.com/embed/' +
-                videoId + '" frameborder="0" allowfullscreen></iframe>'
+                videoId + '" frameborder="0" allowfullscreen></iframe>';
         };
     }
 
+    /** Pattern - YouTube links (returns an object with: embed code, id, link and thumbnail image link) */
     addPattern({
         name: 'youtube',
         regexp: /(?:http|https|)(?::\/\/|)(?:www.|)(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/ytscreeningroom\?v=|\/feeds\/api\/videos\/|\/user\S*[^\w\-\s]|\S*[^\w\-\s]))([\w\-]{11})[a-z0-9;:@?&%=+\/\$_.-]*/gim,
@@ -234,6 +348,7 @@
 
 
 
+    /** Build public API */
     Extractor.VERSION = '0.0.1';
     Extractor.addPattern = addPattern;
     Extractor.noConflict = function noConflict() {
@@ -241,8 +356,6 @@
         return this;
     };
 
-    Extractor._ = _;
-    Extractor.patterns = patterns;
-
+    /** Return public API */
     return Extractor;
 });

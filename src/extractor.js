@@ -51,8 +51,7 @@
     };
 
     _.isBoolean = function isBoolean(val) {
-        return val === true || val === false ||
-            (val && Object.prototype.toString.call(val) === '[object Boolean]') || false;
+        return val === true || val === false || (val && _.protoToString(val) === '[object Boolean]') || false;
     };
 
     _.isFunction = function isFunction(val) {
@@ -60,11 +59,15 @@
     };
 
     _.isPlainObject = function isPlainObject(val) {
-        return val && Object.prototype.toString.call(val) === '[object Object]';
+        return val && _.protoToString(val) === '[object Object]';
     };
 
     _.isRegExp = function isRegExp(val) {
-        return val && Object.prototype.toString.call(val) === '[object RegExp]';
+        return val && _.protoToString(val) === '[object RegExp]';
+    };
+
+    _.protoToString = function protoToString(val) {
+        return Object.prototype.toString.call(val);
     };
 
     _.isUndefined = function isUndefined(val) {
@@ -169,38 +172,64 @@
                 dayMonth = day + '\\s+(?:of\\s+)?' + month,
                 monthDay = month + '\\s+' + day,
                 optionalYear = '(?:\\,)?\\s*(?:' + year + ')?';
-            return new RegExp('(?:' + dayMonth + '|' + monthDay + ')' + optionalYear + '|' + dateSlashed, 'gmi');
+            return new RegExp('(?:' + dayMonth + '|' + monthDay + ')' + optionalYear + '|' + dateSlashed, 'gim');
         }())
     });
 
     addPattern({
         name: 'emails',
-        regexp: /([a-z0-9!#$%&'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gmi
+        regexp: /([a-z0-9!#$%&'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gim
     });
 
     addPattern({
         name: 'hashtags',
-        regexp: /#(.+?)(?=[\s.,:,]|$)/gmi
+        regexp: /#(.+?)(?=[\s.,:,]|$)/gim
     });
 
     addPattern({
         name: 'links',
-        regexp: /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))/gmi
+        regexp: /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))/gim
     });
 
     addPattern({
         name: 'mentions',
-        regexp: /\B@([\w\-]+)/gmi
+        regexp: /\B@([\w\-]+)/gim
     });
 
     addPattern({
         name: 'phones',
-        regexp: /(\d?\W*(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gmi
+        regexp: /(\d?\W*(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gim
     });
 
     addPattern({
         name: 'times',
-        regexp: /\d{1,2}:\d{2}\s?(?:[ap]\.?m\.?)?|\d[ap]\.?m\.?/gmi
+        regexp: /\d{1,2}:\d{2}\s?(?:[ap]\.?m\.?)?|\d[ap]\.?m\.?/gim
+    });
+
+    function youTubeEmbedCode(videoId) {
+        return function (w, h) {
+            var width = _.isUndefined(w) ? 560 : w,
+                height = _.isUndefined(h) ? 315 : h;
+            return '<iframe width="' + width + '" height="' + height + '" src="//www.youtube.com/embed/' +
+                videoId + '" frameborder="0" allowfullscreen></iframe>'
+        };
+    }
+
+    addPattern({
+        name: 'youtube',
+        regexp: /(?:http|https|)(?::\/\/|)(?:www.|)(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/ytscreeningroom\?v=|\/feeds\/api\/videos\/|\/user\S*[^\w\-\s]|\S*[^\w\-\s]))([\w\-]{11})[a-z0-9;:@?&%=+\/\$_.-]*/gim,
+        postProcessor: function (item) {
+            var thumbLink = 'http://img.youtube.com/vi/',
+                findId = item.match(/(?:v=|\.be\/){1}([\w\-]{11}){1}/i),
+                id = (findId && !_.isUndefined(findId[1])) ? findId[1] : '';
+            return {
+                embed: youTubeEmbedCode(id),
+                id: id,
+                link: item,
+                thumb: thumbLink + id + '/default.jpg',
+                thumbHQ: thumbLink + id + '/hqdefault.jpg'
+            }
+        }
     });
 
 

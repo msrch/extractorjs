@@ -80,6 +80,8 @@
         return "undefined" == typeof val;
     }, _.trim = function(str) {
         return ("" + str).replace(/^\s+|\s+$/g, "");
+    }, _.trimFirst = function(str) {
+        return ("" + str).slice(1);
     }, _.unique = function(arr) {
         return arr.reduce(function(result, current) {
             return ~result.indexOf(current) || result.push(current), result;
@@ -95,13 +97,15 @@
         regexp: /([a-z0-9!#$%&'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gim
     }), addPattern({
         name: "hashtags",
-        regexp: /#(.+?)(?=[\s.,:,]|$)/gim
+        regexp: /#(.+?)(?=[\s.,:,]|$)/gim,
+        postProcessor: _.trimFirst
     }), addPattern({
         name: "links",
         regexp: /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))/gim
     }), addPattern({
         name: "mentions",
-        regexp: /\B@([\w\-]+)/gim
+        regexp: /\B@([\w\-]+)/gim,
+        postProcessor: _.trimFirst
     }), addPattern({
         name: "phones",
         regexp: /(\d?\W*(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gim

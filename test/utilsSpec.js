@@ -227,6 +227,18 @@ describe('Utility functions', function () {
         });
     });
 
+    describe('_.trimFirst()', function () {
+
+        it('Should trim first character.', function () {
+            expect(_.trimFirst('1test')).toEqual('test');
+            expect(_.trimFirst('a')).toEqual('');
+        });
+
+        it('Should not trim.', function () {
+            expect(_.trimFirst('')).toEqual('');
+        });
+    });
+
     describe('_.unique()', function () {
 
         it('Should remove duplicates.', function () {

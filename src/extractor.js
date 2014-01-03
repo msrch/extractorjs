@@ -137,6 +137,16 @@ _.trim = function trim(str) {
 };
 
 /**
+ * Trim first character of the string.
+ *
+ * @param {String} str String to be trimmed.
+ * @returns {String} Trimmed string.
+ */
+_.trimFirst = function trimFirst(str) {
+    return ('' + str).slice(1);
+};
+
+/**
  * Remove duplicates from an array.
  *
  * @param {Array} arr Source array.
@@ -275,7 +285,8 @@ addPattern({
 /** Pattern - Hash tag values */
 addPattern({
     name: 'hashtags',
-    regexp: /#(.+?)(?=[\s.,:,]|$)/gim
+    regexp: /#(.+?)(?=[\s.,:,]|$)/gim,
+    postProcessor: _.trimFirst
 });
 
 /** Pattern - Web links */
@@ -287,7 +298,8 @@ addPattern({
 /** Pattern - Mention values */
 addPattern({
     name: 'mentions',
-    regexp: /\B@([\w\-]+)/gim
+    regexp: /\B@([\w\-]+)/gim,
+    postProcessor: _.trimFirst
 });
 
 /** Pattern - Phone formats */

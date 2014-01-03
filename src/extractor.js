@@ -93,7 +93,7 @@ _.isFunction = function isFunction(val) {
  * @returns {Boolean} Test result.
  */
 _.isPlainObject = function isPlainObject(val) {
-    return val && _.protoToString(val) === '[object Object]';
+    return (val && _.protoToString(val) === '[object Object]') || false;
 };
 
 /**
@@ -103,7 +103,7 @@ _.isPlainObject = function isPlainObject(val) {
  * @returns {Boolean} Test result.
  */
 _.isRegExp = function isRegExp(val) {
-    return val && _.protoToString(val) === '[object RegExp]';
+    return (val && _.protoToString(val) === '[object RegExp]') || false;
 };
 
 /**

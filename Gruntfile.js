@@ -16,6 +16,7 @@ module.exports = function(grunt) {
 
         clean: {
             build: ['<%= pathBuild %>/*'],
+            jasmine: ['.grunt', '_SpecRunner.html'],
             temp: ['<%= pathBuild %>/_*.js']
         },
 
@@ -35,7 +36,8 @@ module.exports = function(grunt) {
             dev: {
                 src: ['<%= pathSrc %>/<%= fileName %>.js'],
                 options: {
-                    specs: ['test/utilsSpec.js', 'test/extractorSpec.js', 'test/patternsSpec.js']
+                    keepRunner: true,
+                    specs: ['test/*Spec.js']
                 }
             }
         },
@@ -112,7 +114,7 @@ module.exports = function(grunt) {
     // Register task(s).
     grunt.registerTask('build', 'Build script.', ['test-dev', 'wrap', 'uglify', 'clean:temp', 'test-build']);
     grunt.registerTask('default', 'Default task - test and watch.', ['test-dev', 'watch']);
-    grunt.registerTask('test-build', 'Run build tests.', ['jasmine:build', 'jasmine:buildMin']);
-    grunt.registerTask('test-dev', 'Run dev tests.', ['jshint', 'jasmine:dev']);
+    grunt.registerTask('test-build', 'Run build tests.', ['clean:jasmine', 'jasmine:build', 'jasmine:buildMin']);
+    grunt.registerTask('test-dev', 'Run dev tests.', ['clean:jasmine', 'jshint', 'jasmine:dev']);
     grunt.registerTask('wrap', 'Wrap file.', ['clean:build', 'replace']);
 };

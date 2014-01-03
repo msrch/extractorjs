@@ -1,6 +1,6 @@
 describe('Extractor instance', function () {
 
-    describe('Extractor constructor', function () {
+    describe('Extractor()', function () {
 
         it('Should return results', function () {
 
@@ -51,7 +51,43 @@ describe('Extractor instance', function () {
 
     describe('addPattern()', function () {
 
+        it('Should throw an error', function () {
+            expect(function() {Extractor.addPattern();}).toThrow();
+            expect(function() {Extractor.addPattern({name: ''});}).toThrow();
+            expect(function() {Extractor.addPattern({name: '!@£$%^&* '});}).toThrow();
+            expect(function() {Extractor.addPattern({name: 'times'});}).toThrow();
+            expect(function() {Extractor.addPattern({name: 'test', regexp: 'not'});}).toThrow();
+            expect(function() {Extractor.addPattern({name: 'test', regexp: /^test$/gim, trim: 'string'});}).toThrow();
+            expect(function() {Extractor.addPattern({name: 'test', regexp: /^test$/gim, trim: true, postProcessor: 'noop'});}).toThrow();
+        });
 
+        it('Should add a new pattern.', function () {
+
+            var test;
+
+            expect(function() {
+                test = Extractor.addPattern({
+                    name: 'testOne',
+                    regexp: /test/gim,
+                    trim: true,
+                    postProcessor: function (val) {
+                        return val + '1';
+                    }
+                });
+            }).not.toThrow();
+
+            expect(typeof test === 'function').toBe(true);
+            expect(test('test new pattern')[0]).toEqual('test1');
+            expect(test('test and TEST').length).toEqual(2);
+            expect(test('not a match')).toEqual([]);
+        });
+
+        it('New pattern should be added.', function () {
+            var test = Extractor();
+            expect(test.testOne).toBeDefined();
+            expect(typeof test.testOne === 'function').toBe(true);
+            expect(test.testOne('test new pattern')[0]).toEqual('test1');
+        });
     });
 
 });

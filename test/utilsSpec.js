@@ -76,7 +76,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.isBoolean', function () {
+    describe('_.isBoolean()', function () {
 
         it('Should pass.', function () {
             expect(_.isBoolean(true)).toBe(true);
@@ -100,7 +100,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.isFunction', function () {
+    describe('_.isFunction()', function () {
 
         it('Should pass.', function () {
             expect(_.isFunction(function () {})).toBe(true);
@@ -125,7 +125,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.isPlainObject', function () {
+    describe('_.isPlainObject()', function () {
 
         it('Should pass.', function () {
             expect(_.isPlainObject({a: 1, b: 2})).toBe(true);
@@ -150,7 +150,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.isRegExp', function () {
+    describe('_.isRegExp()', function () {
 
         it('Should pass.', function () {
             expect(_.isRegExp(/^regex/i)).toBe(true);
@@ -175,7 +175,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.protoToString', function () {
+    describe('_.protoToString()', function () {
 
         it('Invoke toString method from Object prototype.', function () {
             expect(_.protoToString({})).toEqual('[object Object]');
@@ -183,7 +183,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.isUndefined', function () {
+    describe('_.isUndefined()', function () {
 
         it('Should pass.', function () {
             expect(_.isUndefined(void 0)).toBe(true);
@@ -208,7 +208,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.trim', function () {
+    describe('_.trim()', function () {
 
         it('Should trim a white space.', function () {
             expect(_.trim('test ')).toEqual('test');
@@ -227,7 +227,7 @@ describe('Utility functions', function () {
         });
     });
 
-    describe('_.unique', function () {
+    describe('_.unique()', function () {
 
         it('Should remove duplicates.', function () {
             expect(_.unique([1, 2, 3, 3])).toEqual([1, 2, 3]);
@@ -239,6 +239,30 @@ describe('Utility functions', function () {
         it('Should not change anything.', function () {
             expect(_.unique([])).toEqual([]);
             expect(_.unique([1, 2, 3])).toEqual([1, 2, 3]);
+        });
+    });
+
+    describe('buildPattern()', function () {
+
+        var test = buildPattern({
+            name: 'testPattern',
+            regexp: /test/gim,
+            trim: true,
+            postProcessor: function (val) {
+                return val + '1';
+            }
+        });
+
+        it('Should return a new pattern.', function () {
+            expect(typeof test === 'function').toBe(true);
+            expect(test('test new pattern')[0]).toEqual('test1');
+            expect(test('test and TEST').length).toEqual(2);
+            expect(test('not a match')).toEqual([]);
+        });
+
+        it('New pattern should accept duplicates config.', function () {
+            expect(test('test and test', false).length).toEqual(1);
+            expect(test('test and test', true).length).toEqual(2);
         });
     });
 

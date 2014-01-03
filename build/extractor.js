@@ -71,9 +71,9 @@
     }, _.isFunction = function(val) {
         return "function" == typeof val;
     }, _.isPlainObject = function(val) {
-        return val && "[object Object]" === _.protoToString(val);
+        return val && "[object Object]" === _.protoToString(val) || !1;
     }, _.isRegExp = function(val) {
-        return val && "[object RegExp]" === _.protoToString(val);
+        return val && "[object RegExp]" === _.protoToString(val) || !1;
     }, _.protoToString = function(val) {
         return Object.prototype.toString.call(val);
     }, _.isUndefined = function(val) {

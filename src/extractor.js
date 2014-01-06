@@ -298,20 +298,20 @@ addPattern({
 /** Pattern - Mention values */
 addPattern({
     name: 'mentions',
-    regexp: /\B@([\w\-]+)/gim,
+    regexp: /\B@([^@\s]+?)(?=[\s\.,:\?!]|$)/gim,
     postProcessor: _.trimFirst
 });
 
 /** Pattern - Phone formats */
 addPattern({
     name: 'phones',
-    regexp: /(\d?\W*(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gim
+    regexp: /((?:[+(\s]*\d+\W*)?(?:\(?\d{3}\)?\W*)?\d{3}\W*\d{4})/gim
 });
 
 /** Pattern - Time formats */
 addPattern({
     name: 'times',
-    regexp: /\d{1,2}:\d{2}\s?(?:[ap]\.?m\.?)?|\d[ap]\.?m\.?/gim
+    regexp: /\d{1,2}:\d{2}\s?(?:(:|.)\d{2}\s?)?(?:[ap]\.?m\.?)?|\d[ap]\.?m\.?/gim
 });
 
 /**
@@ -337,7 +337,7 @@ addPattern({
     regexp: /(?:http|https|)(?::\/\/|)(?:www.|)(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/ytscreeningroom\?v=|\/feeds\/api\/videos\/|\/user\S*[^\w\-\s]|\S*[^\w\-\s]))([\w\-]{11})[a-z0-9;:@?&%=+\/\$_.-]*/gim,
     postProcessor: function (item) {
         var thumbLink = 'http://img.youtube.com/vi/',
-            findId = item.match(/(?:v=|\.be\/){1}([\w\-]{11}){1}/i),
+            findId = item.match(/(?:v=|\.be\/|\/embed\/){1}([\w\-]{11}){1}/i),
             id = (findId && !_.isUndefined(findId[1])) ? findId[1] : '';
         return {
             embed: youTubeEmbedCode(id),

@@ -1,5 +1,6 @@
 /*!
  * extractorjs v0.0.1 - Extract common information from a string.
+ * https://github.com/msrch/extractorjs (license: MIT)
  * (c) 2014 Michal Srch
  */
 !function(name, context, definition) {

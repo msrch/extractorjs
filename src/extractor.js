@@ -279,13 +279,13 @@ addPattern({
 /** Pattern - Email formats */
 addPattern({
     name: 'emails',
-    regexp: /([a-z0-9!#$%&'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gim
+    regexp: /([a-z0-9!#$%&\.'*+\/=?^_`{|}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/gim
 });
 
 /** Pattern - Hash tag values */
 addPattern({
     name: 'hashtags',
-    regexp: /#(.+?)(?=[\s.,:,]|$)/gim,
+    regexp: /\B#([^#\s]+?)(?=[\s\.,:\?!]|$)/gim,
     postProcessor: _.trimFirst
 });
 

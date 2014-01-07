@@ -2,7 +2,7 @@ describe('Patterns tests', function () {
 
     describe('Test for all', function () {
 
-        var text = '@friend I have sent you an email to your address name@web.com on 3rd of June 2013 at 14:36pm \n' +
+        var text = '@friend I have sent you an email to your address name@web.com on 3rd of June 2013 at 12:36pm \n' +
             'about your web www.some-website.com. Watch this youtu.be/5Jp9_sgJcN0 and then call me (123) 456 7890. \n' +
             '#video #website';
 
@@ -31,7 +31,7 @@ describe('Patterns tests', function () {
             expect(results.phones[0]).toEqual('(123) 456 7890');
 
             expect(results.times.length).toEqual(1);
-            expect(results.times[0]).toEqual('14:36pm');
+            expect(results.times[0]).toEqual('12:36pm');
 
             expect(results.youtube.length).toEqual(1);
             expect(results.youtube[0].embed()).toEqual('<iframe width="560" height="315" src="//www.youtube.com/embed/5Jp9_sgJcN0" frameborder="0" allowfullscreen></iframe>');

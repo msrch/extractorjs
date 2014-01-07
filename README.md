@@ -61,7 +61,7 @@ Following information/values will be extracted:
 
 There are two main way how to **Extractor.js**:
 
-### 1. Pass a text string and receive an object with results
+### 1. Pass a text string → receive an object with results
 
 ```javascript
 var results = Extractor('Lorem #ipsum text...');
@@ -86,7 +86,7 @@ ytEmbed(640, 480);
 // <iframe width="640" height="480" src="//www.youtube.com/embed/5Jp9_sgJcN0" frameborder="0" allowfullscreen></iframe>
 ```
 
-### 2. Calling without arguments and receive pattern methods
+### 2. Calling without arguments → receive pattern methods
 
 ```javascript
 var ex = Extractor();
@@ -98,7 +98,7 @@ ex.emails('Try some@email.com');
 // ["some@email.com"]
 ```
 
-Methods matches the names of the patterns/variables mentioned above.
+Methods match the names of the patterns/variables mentioned above.
 
 #### Duplicates
 
@@ -158,8 +158,82 @@ default: `true`
 Remove duplicate values from the results.
 
 ```javascript
-var uniqueResults = Extractor('Try @one @two and @one', {duplicates: true}).mentions;
+var uniqueResults = Extractor('Try @one @two and @one', {
+        duplicates: true
+    }).mentions;
 // ["one", "two"]
 ```
 
-### Adding new pattern
+### Adding new pattern - `Extractor.addPattern()`
+
+You can add new pattern as follows.
+
+```javascript
+// Adding "test" pattern which will match word "test"
+// and as a result adds "1" to the end of the string.
+Extractor.addPattern({
+    name: 'test',
+    regexp: /\btest\b/gim,
+    postProcessor: function (value) {
+        return value + '1';
+    }
+});
+```
+
+Pattern will be automatically across the whole library so next time you will use `Extractor(...)` you will get results for
+your pattern. And also you can use just the method alone if you call `Extractor()` without arguments.
+
+```javascript
+Extractor().test('test and test');
+// ["test1", "test1"]
+
+Extractor('test and #other', {
+    filter: ['test', 'hashtags', 'times']
+});
+// {"hashtags": ["other"], "times": [], "test": ["test1"]}
+```
+
+Here is a list of configuration options:
+
+#### name
+type: `String`
+default: `null`
+
+Name of new pattern. Can't use existing pattern name and will accept only lowercase and uppercase letters.
+
+```
+name: 'test',
+```
+
+#### regexp
+type: `RegExp`
+default: `null`
+
+Regular expression that defines behaviour of your pattern - what you want to match.
+
+```
+regexp: /\btest\b/gim,
+```
+
+#### trim `[optional]`
+type: `Boolean`
+default: `true`
+
+Should the white space around the result value be stripped out.
+
+```
+trim: false,
+```
+
+#### postProcessor `[optional]`
+type: `Function`
+default: `null`
+
+You can specify post-processing method which will append the result value as desired.
+
+```
+// Example - just add '1' after a result.
+postProcessor: function (value) {
+        return value + '1';
+    }
+```

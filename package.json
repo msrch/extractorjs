@@ -1,6 +1,6 @@
 {
     "name": "extractorjs",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Extract common information from a string.",
     "copyright": "Michal Srch",
     "homepage": "https://github.com/msrch/extractorjs",

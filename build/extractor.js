@@ -1,5 +1,5 @@
 /*!
- * extractorjs v0.0.1 - Extract common information from a string.
+ * extractorjs v0.1.0 - Extract common information from a string.
  * https://github.com/msrch/extractorjs (license: MIT)
  * (c) 2014 Michal Srch
  */
@@ -128,5 +128,5 @@
         }
     }), Extractor.addPattern = addPattern, Extractor.noConflict = function() {
         return root.Extractor = previousExtractor, this;
-    }, Extractor.VERSION = "0.0.1", Extractor;
+    }, Extractor.VERSION = "0.1.0", Extractor;
 });

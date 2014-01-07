@@ -7,7 +7,7 @@
 ## About
 
 **Extractor.js** is a small library that helps to extract common information like dates, times, emails or links from
-text. It also provides an easy way how to add new patterns to extract new things.
+text. It also provides an easy way to add new patterns to extract custom things.
 
 ### Patterns
 
@@ -59,7 +59,7 @@ Following information/values will be extracted:
 
 ## How to use
 
-There are two main way how to **Extractor.js**:
+There are two main ways how to use **Extractor.js**:
 
 ### 1. Pass a text string → receive an object with results
 
@@ -98,7 +98,7 @@ ex.emails('Try some@email.com');
 // ["some@email.com"]
 ```
 
-Methods match the names of the patterns/variables mentioned above.
+Method names match the names of the patterns/variables mentioned above.
 
 #### Duplicates
 
@@ -119,7 +119,7 @@ ex.mentions('Try @one @two and @one', false);
 
 ### Options for Extractor()
 
-You can pass additional settings when parsing a string.
+You can pass additional settings when parsing a string directly.
 
 ```javascript
 var results = Extractor('Lorem ipsum...', {/* additional settings */});
@@ -174,14 +174,15 @@ You can add new pattern as follows.
 Extractor.addPattern({
     name: 'test',
     regexp: /\btest\b/gim,
+    trim: true,
     postProcessor: function (value) {
         return value + '1';
     }
 });
 ```
 
-Pattern will be automatically across the whole library so next time you will use `Extractor(...)` you will get results for
-your pattern. And also you can use just the method alone if you call `Extractor()` without arguments.
+Pattern will be automatically used across the whole library so next time you will use `Extractor(...)` you will get
+results for your pattern as well. And also you can use just the method if you call `Extractor()` without any arguments.
 
 ```javascript
 Extractor().test('test and test');
@@ -222,14 +223,14 @@ default: `true`
 Should the white space around the result value be stripped out.
 
 ```
-trim: false,
+trim: true,
 ```
 
 #### postProcessor `[optional]`
 type: `Function`
 default: `null`
 
-You can specify post-processing method which will append the result value as desired.
+You can specify post-processing method which will amend the result value as desired.
 
 ```
 // Example - just add '1' after a result.
@@ -237,3 +238,36 @@ postProcessor: function (value) {
         return value + '1';
     }
 ```
+
+
+
+## Development
+
+Dev environment is set up using `Grunt`, tests are written in `Jasmine`.
+
+Licensed **MIT**.
+
+### Grunt
+
+Requires **Grunt** `~0.4.0`.
+
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the
+[Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a
+[Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins.
+
+Here is a list of some notable tasks:
+
+#### default
+Runs dev tests and start watch source files (see _"watch"_ task).
+
+#### build
+Runs all the tests and builds the production files.
+
+#### test-dev
+Runs JSHint and tests for source files only.
+
+#### test-build
+Runs tests on production/build files.
+
+#### watch
+Watches source files and if any change detected - runs _"test-dev"_ task.
